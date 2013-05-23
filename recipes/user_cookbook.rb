@@ -11,7 +11,6 @@ git "Clone #{cookbook_name}" do
   reference "master"
   destination "/var/chef/cookbooks/#{cookbook_name}"
   action :checkout
-  notifies :run, "execute[s3cmd install]"
 end
 
 template "/var/chef/run_list.json" do
