@@ -23,7 +23,7 @@ template "/var/chef/run_list.json" do
 end
 
 execute "Run chef-solo" do
-  command "chef-solo -j /var/chef/run_list.json"
+  command "chef-solo -j /var/chef/run_list.json > /var/chef/user_cookbook.log"
   action :nothing
   notifies :run, "execute[shutdown]"
 end
