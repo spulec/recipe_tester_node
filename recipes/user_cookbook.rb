@@ -1,3 +1,5 @@
+require 'net/http'
+
 user = node['username']
 data_bag = data_bag_item('recipe-tester', 'config')
 
@@ -31,15 +33,15 @@ execute "Run chef-solo" do
   notifies :run, "execute[post_results]"
 end
 
-# http_request "post_results" do
-#   url "http://recipe-tester.com/build/status"
-#   action :nothing
-#   message :build_id => build_id, :secret_key => data_bag['s3_secret_key'], :status => File.read("/var/chef/user_output.txt")
-#   headers({})
-#   notifies :run, "execute[shutdown]"
-# end
-execute "post_results" do
-  command "curl --data 'build_id=#{build_id}&secret_key=#{data_bag['s3_secret_key']}&status=#{File.read("/var/chef/user_output.txt")}' http://recipe-tester.com/build/status"
+ruby_block "post_results" do
+  block do
+    uri = URI.parse("http://recipe-tester.com/build/status")
+    response = Net::HTTP.post_form(uri, {
+      "build_id" => build_id,
+      "secret_key" => data_bag['s3_secret_key'],
+      "status" => File.read("/var/chef/user_output.txt")
+    })
+  end
   action :nothing
   notifies :run, "execute[shutdown]"
 end
