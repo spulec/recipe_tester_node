@@ -35,7 +35,7 @@ end
 
 ruby_block "post_results" do
   block do
-    uri = URI.parse("http://recipe-tester.com/build/status")
+    uri = URI.parse("http://recipe-tester.com/internal_api/build_status")
     response = Net::HTTP.post_form(uri, {
       "build_id" => build_id,
       "secret_key" => data_bag['s3_secret_key'],
