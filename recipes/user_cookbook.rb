@@ -30,7 +30,7 @@ execute "Run chef-solo" do
   command "chef-solo -j /var/chef/run_list.json > /var/chef/user_cookbook.log; echo $? > /var/chef/user_output.txt"
   action :nothing
   ignore_failure true
-  notifies :run, "ruby_block[post_results]"
+  notifies :create, "ruby_block[post_results]"
 end
 
 ruby_block "post_results" do
