@@ -3,12 +3,14 @@ data_bag = data_bag_item('recipe-tester', 'config')
 
 cookbook_name = data_bag['cookbook_name']
 cookbook_url = data_bag['cookbook_url']
+commit_reference = data_bag['cookbook_commit']
+build_id = data_bag['build_id']
 
 git "Clone #{cookbook_name}" do
   user user
   group user
   repository cookbook_url
-  reference "master"
+  reference commit_reference
   destination "/var/chef/cookbooks/#{cookbook_name}"
   action :checkout
 end
@@ -32,12 +34,12 @@ end
 http_request "post_results" do
   url "http://recipe-tester.com/build/status"
   action :nothing
-  message :cookbook_name => cookbook_name, :secret_key => data_bag['s3_secret_key'], :status => File.read("/var/chef/user_output.txt")
+  message :build_id => build_id, :secret_key => data_bag['s3_secret_key'], :status => File.read("/var/chef/user_output.txt")
   headers({})
   notifies :run, "execute[shutdown]"
 end
 
 execute "shutdown" do
-  command "echo 'sudo shutdown -h now'"
+  command "sudo shutdown -h now"
   action :nothing
 end
