@@ -31,11 +31,16 @@ execute "Run chef-solo" do
   notifies :post, "post_results"
 end
 
-http_request "post_results" do
-  url "http://recipe-tester.com/build/status"
+# http_request "post_results" do
+#   url "http://recipe-tester.com/build/status"
+#   action :nothing
+#   message :build_id => build_id, :secret_key => data_bag['s3_secret_key'], :status => File.read("/var/chef/user_output.txt")
+#   headers({})
+#   notifies :run, "execute[shutdown]"
+# end
+execute "post_results" do
+  command "curl --data 'build_id=#{build_id}&secret_key=#{data_bag['s3_secret_key']}&status=#{File.read("/var/chef/user_output.txt")}' http://recipe-tester.com/build/status"
   action :nothing
-  message :build_id => build_id, :secret_key => data_bag['s3_secret_key'], :status => File.read("/var/chef/user_output.txt")
-  headers({})
   notifies :run, "execute[shutdown]"
 end
 
