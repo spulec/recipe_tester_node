@@ -19,7 +19,7 @@ git "Clone #{cookbook_name}" do
   action :checkout
 end
 
-template "/var/chef/cookbooks/#{cookbook_name}/Berksfile"
+template "/var/chef/cookbooks/#{cookbook_name}/Berksfile" do
   source "Berksfile.erb"
   owner user
   group user
