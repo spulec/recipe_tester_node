@@ -7,7 +7,7 @@ data_bag = data_bag_item('recipe-tester', 'config')
   end
 end
 
-["httparty", "json"].each do |pkg|
+["httparty", "json", "berkshelf"].each do |pkg|
   chef_gem pkg do
     action :install
   end

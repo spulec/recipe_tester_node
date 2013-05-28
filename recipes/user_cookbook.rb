@@ -19,6 +19,22 @@ git "Clone #{cookbook_name}" do
   action :checkout
 end
 
+template "/var/chef/cookbooks/#{cookbook_name}/Berksfile"
+  source "Berksfile.erb"
+  owner user
+  group user
+  notifies :run, "execute[Berksfile install]"
+  not_if {File.exists?("/var/chef/cookbooks/#{cookbook_name}/Berksfile")}
+end
+
+execute "Berksfile install" do
+  command "berks install >> /var/chef/user_cookbook.log"
+  action :nothing
+  ignore_failure true
+  cwd "/var/chef/cookbooks/#{cookbook_name}"
+end
+
+
 template "/var/chef/run_list.json" do
   source "run_list.erb"
   owner user
@@ -29,7 +45,7 @@ template "/var/chef/run_list.json" do
 end
 
 execute "Run chef-solo" do
-  command "chef-solo -j /var/chef/run_list.json > /var/chef/user_cookbook.log; echo $? > /var/chef/user_output.txt"
+  command "chef-solo -j /var/chef/run_list.json >> /var/chef/user_cookbook.log; echo $? > /var/chef/user_output.txt"
   action :nothing
   ignore_failure true
   notifies :create, "ruby_block[post_results]"
