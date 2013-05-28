@@ -2,21 +2,13 @@ user = node['username']
 data_bag = data_bag_item('recipe-tester', 'config')
 
 # Install these immediately so berkshelf install will work
-['libxml2-dev', 'libxslt1-dev'].each do |pkg|
+['libxml2-dev', 'libxslt1-dev', 'rubygems', 'vim', 'git'].each do |pkg|
   p = package pkg do
     action :nothing
     retry_delay 5
     retries 2
   end
   p.run_action(:install)
-end
-
-['rubygems', 'vim', 'git'].each do |pkg|
-  package pkg do
-    action :install
-    retry_delay 5
-    retries 2
-  end
 end
 
 ["httparty", "json", "berkshelf"].each do |pkg|
