@@ -7,12 +7,18 @@ data_bag = data_bag_item('recipe-tester', 'config')
     retry_delay 5
     retries 2
   end
+  notifies :install, "chef_gem[berkshelf]"
 end
 
-["httparty", "json", "berkshelf"].each do |pkg|
+["httparty", "json"].each do |pkg|
   chef_gem pkg do
     action :install
   end
+end
+
+# Need XML packages before installing
+chef_gem "berkshelf" do
+  action :nothing
 end
 
 template "/home/ubuntu/.s3cfg" do
