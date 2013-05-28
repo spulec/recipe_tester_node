@@ -1,4 +1,6 @@
-require 'net/http'
+require 'rubygems'
+require 'httparty'
+require 'json'
 
 user = node['username']
 data_bag = data_bag_item('recipe-tester', 'config')
@@ -35,12 +37,13 @@ end
 
 ruby_block "post_results" do
   block do
-    uri = URI.parse("https://recipe-tester.com/internal_api/build_status")
-    response = Net::HTTP.post_form(uri, {
-      "build_id" => build_id,
-      "secret_key" => data_bag['s3_secret_key'],
-      "status" => File.read("/var/chef/user_output.txt")
-    })
+    file_data = File.read("/var/chef/user_output.txt").strip
+    HTTParty.post('https://recipe-tester.com/internal_api/build_status',
+        :body => {
+                    :build_id => build_id,
+                    :secret_key => data_bag['s3_secret_key'],
+                    :status => file_data
+                 })
   end
   action :nothing
   notifies :run, "execute[shutdown]"

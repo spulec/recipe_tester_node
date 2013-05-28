@@ -2,9 +2,15 @@ user = node['username']
 data_bag = data_bag_item('recipe-tester', 'config')
 
 ['rubygems', 'vim', 'git'].each do |pkg|
-    package pkg do
-        :install
-    end
+  package pkg do
+    :install
+  end
+end
+
+["httparty", "json"].each do |pkg|
+  gem_package pkg do
+    action :install
+  end
 end
 
 template "/home/ubuntu/.s3cfg" do
