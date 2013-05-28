@@ -33,6 +33,7 @@ execute "Berksfile install" do
   action :nothing
   ignore_failure true
   cwd "/var/chef/cookbooks/#{cookbook_name}"
+  environment ({'BERKSHELF_PATH' => '/var/chef/cookbooks'})
 end
 
 
