@@ -23,7 +23,6 @@ template "/var/chef/cookbooks/#{cookbook_name}/Berksfile" do
   source "Berksfile.erb"
   owner user
   group user
-  notifies :run, "execute[Berksfile install]"
   not_if {File.exists?("/var/chef/cookbooks/#{cookbook_name}/Berksfile")}
 end
 
