@@ -1,24 +1,28 @@
 user = node['username']
 data_bag = data_bag_item('recipe-tester', 'config')
 
-['libxml2-dev', 'libxslt1-dev', 'rubygems', 'vim', 'git'].each do |pkg|
+# Install these immediately so berkshelf install will work
+['libxml2-dev', 'libxslt1-dev'].each do |pkg|
+  p = package pkg do
+    action :nothing
+    retry_delay 5
+    retries 2
+  end
+  p.run_action(:install)
+end
+
+['rubygems', 'vim', 'git'].each do |pkg|
   package pkg do
     action :install
     retry_delay 5
     retries 2
   end
-  notifies :install, "chef_gem[berkshelf]"
 end
 
-["httparty", "json"].each do |pkg|
+["httparty", "json", "berkshelf"].each do |pkg|
   chef_gem pkg do
     action :install
   end
-end
-
-# Need XML packages before installing
-chef_gem "berkshelf" do
-  action :nothing
 end
 
 template "/home/ubuntu/.s3cfg" do
