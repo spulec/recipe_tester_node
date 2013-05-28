@@ -7,10 +7,14 @@ data_bag = data_bag_item('recipe-tester', 'config')
   end
 end
 
-["httparty", "json", "berkshelf"].each do |pkg|
+["httparty", "json"].each do |pkg|
   chef_gem pkg do
     action :install
   end
+end
+
+gem_package "berkshelf" do
+  action :install
 end
 
 template "/home/ubuntu/.s3cfg" do
