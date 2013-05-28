@@ -28,7 +28,8 @@ template "/var/chef/cookbooks/#{cookbook_name}/Berksfile"
 end
 
 execute "Berksfile install" do
-  command "berks install >> /var/chef/user_cookbook.log"
+  # We install berkshelf to the chef ruby to avoid conflicts with the user cookbook
+  command "/opt/chef/embedded/bin/berks install >> /var/chef/user_cookbook.log"
   action :nothing
   ignore_failure true
   cwd "/var/chef/cookbooks/#{cookbook_name}"

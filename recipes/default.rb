@@ -1,20 +1,18 @@
 user = node['username']
 data_bag = data_bag_item('recipe-tester', 'config')
 
-['rubygems', 'vim', 'git'].each do |pkg|
+['libxml2-dev', 'libxslt1-dev', 'rubygems', 'vim', 'git'].each do |pkg|
   package pkg do
-    :install
+    action :install
+    retry_delay 5
+    retries 2
   end
 end
 
-["httparty", "json"].each do |pkg|
+["httparty", "json", "berkshelf"].each do |pkg|
   chef_gem pkg do
     action :install
   end
-end
-
-gem_package "berkshelf" do
-  action :install
 end
 
 template "/home/ubuntu/.s3cfg" do
