@@ -1,3 +1,7 @@
+require 'rubygems'
+require 'httparty'
+require 'json'
+
 user = node['username']
 data_bag = data_bag_item('recipe-tester', 'config')
 
@@ -33,9 +37,6 @@ end
 
 ruby_block "post_results" do
   block do
-    require 'rubygems'
-    require 'httparty'
-    require 'json'
     file_data = File.read("/var/chef/user_output.txt").strip
     HTTParty.post('https://recipe-tester.com/internal_api/build_status',
         :body => {

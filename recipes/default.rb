@@ -8,7 +8,7 @@ data_bag = data_bag_item('recipe-tester', 'config')
 end
 
 ["httparty", "json"].each do |pkg|
-  gem_package pkg do
+  chef_gem pkg do
     action :install
   end
 end
