@@ -29,11 +29,10 @@ end
 
 execute "Berksfile install" do
   # We install berkshelf to the chef ruby to avoid conflicts with the user cookbook
-  command "/opt/chef/embedded/bin/berks install >> /var/chef/user_cookbook.log"
+  command "/opt/chef/embedded/bin/berks install --path /var/chef/cookbooks >> /var/chef/user_cookbook.log"
   action :nothing
   # ignore_failure true
   cwd "/var/chef/cookbooks/#{cookbook_name}"
-  environment ({'BERKSHELF_PATH' => '/var/chef/cookbooks'})
 end
 
 
