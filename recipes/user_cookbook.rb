@@ -10,6 +10,14 @@ cookbook_url = data_bag['cookbook_url']
 commit_reference = data_bag['cookbook_commit']
 build_id = data_bag['build_id']
 
+template "/var/chef/run_list.json" do
+  source "run_list.erb"
+  owner user
+  group user
+  variables(
+    :run_list => data_bag['run_list'])
+end
+
 git "Clone #{cookbook_name}" do
   user user
   group user
@@ -34,21 +42,12 @@ execute "Berksfile install" do
   cwd "/var/chef/cookbooks/#{cookbook_name}"
 end
 
-
-template "/var/chef/run_list.json" do
-  source "run_list.erb"
-  owner user
-  group user
-  variables(
-    :run_list => data_bag['run_list'])
-  notifies :run, "execute[Run chef-solo]"
-end
+# After this point, the recipe_tester_node cookbook is no longer available
 
 execute "Run chef-solo" do
   command "chef-solo -j /var/chef/run_list.json >> /var/chef/user_cookbook.log; echo $? > /var/chef/user_output.txt"
-  action :nothing
+  action :execute
   ignore_failure true
-  notifies :create, "ruby_block[post_results]"
 end
 
 ruby_block "post_results" do
@@ -61,11 +60,10 @@ ruby_block "post_results" do
                     :status => file_data
                  })
   end
-  action :nothing
-  notifies :run, "execute[shutdown]"
+  action :create
 end
 
 execute "shutdown" do
   command "echo 'sudo shutdown -h now'"
-  action :nothing
+  action :run
 end
