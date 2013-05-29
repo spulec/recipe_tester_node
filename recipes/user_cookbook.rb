@@ -46,7 +46,7 @@ end
 
 execute "Run chef-solo" do
   command "chef-solo -j /var/chef/run_list.json >> /var/chef/user_cookbook.log; echo $? > /var/chef/user_output.txt"
-  action :execute
+  action :run
   ignore_failure true
 end
 
@@ -60,7 +60,6 @@ ruby_block "post_results" do
                     :status => file_data
                  })
   end
-  action :create
 end
 
 execute "shutdown" do
