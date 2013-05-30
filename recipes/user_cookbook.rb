@@ -18,6 +18,14 @@ template "/var/chef/run_list.json" do
     :run_list => data_bag['run_list'])
 end
 
+template "/var/chef/node_attributes.json" do
+  source "node_attributes.erb"
+  owner user
+  group user
+  variables(
+    :node_attributes => data_bag['node_attributes'])
+end
+
 git "Clone #{cookbook_name}" do
   user user
   group user
@@ -45,7 +53,7 @@ end
 # After this point, the recipe_tester_node cookbook is no longer available
 
 execute "Run chef-solo" do
-  command "chef-solo -j /var/chef/run_list.json >> /var/chef/user_cookbook.log; echo $? > /var/chef/user_output.txt"
+  command "chef-solo -j /var/chef/node_attributes.json -o /var/chef/run_list.json >> /var/chef/user_cookbook.log; echo $? > /var/chef/user_output.txt"
   action :run
   ignore_failure true
 end
