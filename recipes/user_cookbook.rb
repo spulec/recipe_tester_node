@@ -10,14 +10,15 @@ cookbook_url = data_bag['cookbook_url']
 commit_reference = data_bag['cookbook_commit']
 build_id = data_bag['build_id']
 
+node_attributes = data_bag['node_attributes']
+node_attributes['run_list'] = data_bag['run_list']
 
 template "/var/chef/node_attributes.json" do
   source "node_attributes.erb"
   owner user
   group user
   variables(
-    :run_list => data_bag['run_list'],
-    :node_attributes => data_bag['node_attributes'])
+    :node_attributes => node_attributes.to_json)
 end
 
 git "Clone #{cookbook_name}" do
