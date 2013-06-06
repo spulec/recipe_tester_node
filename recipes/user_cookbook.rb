@@ -52,7 +52,7 @@ end
 # After this point, the recipe_tester_node cookbook is no longer available
 
 execute "Run chef-solo" do
-  command "chef-solo -j /var/chef/node_attributes.json -c /var/chef/solo.rb -l debug >> /var/chef/user_cookbook.log; echo $? > /var/chef/user_output.txt"
+  command "chef-solo -j /var/chef/node_attributes.json -c /var/chef/solo.rb -l debug >> /var/chef/user_cookbook.log 2>&1; echo $? > /var/chef/user_output.txt"
   action :run
   ignore_failure true
 end
