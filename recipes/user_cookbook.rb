@@ -70,6 +70,6 @@ ruby_block "post_results" do
 end
 
 execute "shutdown" do
-  command "sudo shutdown -h now"
+  command "echo 'sudo shutdown -h now'"
   action :run
 end
