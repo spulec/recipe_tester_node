@@ -5,6 +5,7 @@ data_bag = data_bag_item('recipe-tester', 'config')
 ['libxml2-dev', 'libxslt1-dev', 'rubygems', 'git'].each do |pkg|
   p = package pkg do
     action :nothing
+    options "--fix-missing"
     retry_delay 5
     retries 2
   end
