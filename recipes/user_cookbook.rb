@@ -59,6 +59,7 @@ end
 
 ruby_block "post_results" do
   block do
+    sleep(5)  # Sleep 5 seconds to allow final syncing of logs to S3
     file_data = File.read("/var/chef/user_output.txt").strip
     HTTParty.post('https://recipe-tester.com/internal_api/build_status',
         :body => {
