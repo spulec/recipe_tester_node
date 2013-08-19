@@ -2,7 +2,7 @@ user = node['username']
 data_bag = data_bag_item('recipe-tester', 'config')
 
 # Install these immediately so berkshelf install will work
-['libxml2-dev', 'libxslt1-dev', 'rubygems', 'git-core', 'ca-certificates'].each do |pkg|
+['libxml2-dev', 'libxslt1-dev', 'rubygems', 'git-core'].each do |pkg|
   p = package pkg do
     action :nothing
     options "--fix-missing"
