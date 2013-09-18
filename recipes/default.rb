@@ -52,3 +52,8 @@ directory "/var/chef/cookbooks" do
   owner user
   group user
 end
+
+directory "/var/chef/user_cookbook" do
+  owner user
+  group user
+end
