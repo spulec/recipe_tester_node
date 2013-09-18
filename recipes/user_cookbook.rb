@@ -25,7 +25,7 @@ template "/var/chef/node_attributes.json" do
     :node_attributes => data_bag['node_attributes'])
 end
 
-git "Clone #{cookbook_name}" do
+git "Clone user #{cookbook_name}" do
   user user
   group user
   repository cookbook_url
@@ -79,7 +79,7 @@ ruby_block "post_results" do
   end
 end
 
-execute "shutdown" do
-  command "sudo shutdown -h now"
-  action :run
-end
+# execute "shutdown" do
+#   command "sudo shutdown -h now"
+#   action :run
+# end
