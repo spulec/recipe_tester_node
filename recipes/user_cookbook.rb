@@ -44,7 +44,7 @@ end
 
 execute "Berksfile install" do
   # We install berkshelf to the chef ruby to avoid conflicts with the user cookbook
-  command "/opt/chef/embedded/bin/berks install --path /var/chef/cookbooks &> /var/chef/user_cookbook.log"
+  command "/opt/chef/embedded/bin/berks install --path /var/chef/cookbooks >> /var/chef/user_cookbook.log 2>&1"
   action :run
   # ignore_failure true
   cwd "/var/chef/user_cookbook/#{cookbook_name}"
@@ -61,7 +61,7 @@ end
 
 # After this point, the recipe_tester_node cookbook is no longer available
 execute "Run chef-solo" do
-  command "chef-solo -j /var/chef/node_attributes.json -c /var/chef/solo.rb -l debug &> /var/chef/user_cookbook.log 2>&1; echo $? > /var/chef/user_output.txt"
+  command "chef-solo -j /var/chef/node_attributes.json -c /var/chef/solo.rb -l debug >> /var/chef/user_cookbook.log 2>&1; echo $? > /var/chef/user_output.txt"
   action :run
   ignore_failure true
 end
