@@ -30,15 +30,16 @@ git "Clone #{cookbook_name}" do
   group user
   repository cookbook_url
   reference commit_reference
-  destination "/var/chef/cookbooks/#{cookbook_name}"
+  destination "/var/chef/user_cookbook/#{cookbook_name}"
+  #destination "/var/chef/cookbooks/#{cookbook_name}"
   action :checkout
 end
 
-template "/var/chef/cookbooks/#{cookbook_name}/Berksfile" do
+template "/var/chef/user_cookbook/#{cookbook_name}/Berksfile" do
   source "Berksfile.erb"
   owner user
   group user
-  not_if {File.exists?("/var/chef/cookbooks/#{cookbook_name}/Berksfile")}
+  not_if {File.exists?("/var/chef/user_cookbook/#{cookbook_name}/Berksfile")}
 end
 
 execute "Berksfile install" do
@@ -46,11 +47,19 @@ execute "Berksfile install" do
   command "/opt/chef/embedded/bin/berks install --path /var/chef/cookbooks &> /var/chef/user_cookbook.log"
   action :run
   # ignore_failure true
-  cwd "/var/chef/cookbooks/#{cookbook_name}"
+  cwd "/var/chef/user_cookbook/#{cookbook_name}"
+end
+
+git "Clone #{cookbook_name}" do
+  user user
+  group user
+  repository cookbook_url
+  reference commit_reference
+  destination "/var/chef/cookbooks/#{cookbook_name}"
+  action :checkout
 end
 
 # After this point, the recipe_tester_node cookbook is no longer available
-
 execute "Run chef-solo" do
   command "chef-solo -j /var/chef/node_attributes.json -c /var/chef/solo.rb -l debug &> /var/chef/user_cookbook.log 2>&1; echo $? > /var/chef/user_output.txt"
   action :run

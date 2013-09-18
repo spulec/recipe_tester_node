@@ -20,7 +20,7 @@ end
 
 chef_gem "berkshelf" do
   action :install
-  version "1.4.3"
+  version "2.0.10"
 end
 
 template "/home/ubuntu/.s3cfg" do
